@@ -1,4 +1,6 @@
 woocommerce-endiciaxml
 ======================
 
-WooCommerce Endicia / DAZzle XML integration plugin
+WooCommerce Endicia / DAZzle XML Extension
+
+Readme forthcoming!
