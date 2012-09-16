@@ -3,7 +3,7 @@
   * Plugin Name: WooCommerce Endicia XML
   * Plugin URI: https://github.com/adamnorwood/woocommerce-endicia-xml
   * Description: An attempt to integrate WooCommerce with the Endicia DAZzle XML functionality
-  * Version: 0.1a
+  * Version: 0.9a
   * Author: Adam Norwood
   * Author URI: http://adamnorwood.com/
   *
