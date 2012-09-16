@@ -33,7 +33,7 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
   // Why is this class wrapped up in a function wrapper (it's called at the end on the plugin_loaded action hook)?
   // Because otherwise our class fails to find the other WooCommerce classes, as they haven't loaded yet...
-  add_action( 'plugins_loaded', 'wc_endicia_xml_init', 200 );
+  add_action( 'plugins_loaded', 'wc_endicia_xml_init' );
 
   function wc_endicia_xml_init() {
 
@@ -134,6 +134,9 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
        */
       function add_endicia_xml_panel() {
 
+        $totalWeight = $this->get_order_weight();
+        $weightUnit  = get_option('woocommerce_weight_unit');
+
         echo <<< END
 
           <div class="clear"></div>
@@ -141,9 +144,12 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
         <div class="totals_group">
           <h4>Endicia XML</h4>
           <ul class="totals">
-            {$this->add_weight_info()}
             <li class="wide">
-              <label for="endicia-mail-class">Mail class:</label>
+              <label for="order-weight">Total Order Weight (in {$weightUnit}):</label>
+              <input type="text" name="order-weight" id="order-weight" value="{$totalWeight}" />
+            </li>
+            <li class="wide">
+              <label for="endicia-mail-class">Mail Class:</label>
               <select name="endicia_mail_class" id="endicia-mail-class">
                 <option value="FIRST">First-Class Mail</option>
                 <option value="PRIORITY">Priority Mail</option>
@@ -164,7 +170,7 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
               </select>
             </li>
             <li class="wide">
-              <label for="endicial-package-type">Package type:</label>
+              <label for="endicial-package-type">Package Type:</label>
               <select name="endicia_package_type" id="endicia-package-type">
                 <option value="FLATRATEENVELOPE">Flat Rate Envelope</option>
                 <option value="FLATRATEBOX">Flat Rate Box</option>
@@ -207,12 +213,11 @@ END;
 
 
       /**
-       * Adds the "Total Order Weight" input to the order display page, critical info for the Endicia postage
+       * Calculates the total weight for this order based on the product variations contained in the order
        */
-      function add_weight_info() {
+      function get_order_weight() {
 
         $totalWeight = 0;
-        $weightUnit  = get_option('woocommerce_weight_unit');
 
         // Query information about our order, based on the ID in the query string
         $orderID  = ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) ) ? $_GET['post'] : null;
@@ -237,14 +242,7 @@ END;
 
         }
 
-        $output = <<< END
-          <li class="wide">
-            <label for="order-weight">Total Order Weight (in {$weightUnit}):</label>
-            <input type="text" name="order-weight" id="order-weight" value="{$totalWeight}" />
-          </li>
-END;
-
-        return $output;
+        return $totalWeight;
 
       } // ends add_weight_info()
 
