@@ -233,7 +233,7 @@ END;
             foreach ( $items as $item ) {
 
               // And then WC_Product_Variation can leak to us the weight of the item!
-              $product = new WC_Product_Variation( $item['id'] );
+              $product = new WC_Product_Variation( $item['variation_id'] );
               $totalWeight += $product->weight;
 
             }
