@@ -28,18 +28,22 @@
   * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   */
 
-// Make sure WooCommerce is installed and active first, then get started
+// Make sure WooCommerce is installed and active, then get started
 if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
   // Why is this class wrapped up in a function wrapper (it's called at the end on the plugin_loaded action hook)?
   // Because otherwise our class fails to find the other WooCommerce classes, as they haven't loaded yet...
-  add_action( 'plugins_loaded', 'wc_endicia_xml_init' );
+  add_action( 'plugins_loaded', 'wc_endicia_xml_init', 200 );
 
   function wc_endicia_xml_init() {
 
-    // We'll be hooking into the WC_Integration class for functionality
+    // We'll be hooking into a couple of WC classes for functionality
     if ( !class_exists('WC_Integration') ) {
       require( ABSPATH . 'wp-content/plugins/woocommerce/classes/integrations/class-wc-integration.php' ); exit;
+    }
+
+    if ( !class_exists('WC_Product_Variation') ) {
+      require( ABSPATH . 'wp-content/plugins/woocommerce/classes/class-wc-product-variation.php' );
     }
 
     class WC_Endicia_XML extends WC_Integration {
@@ -58,7 +62,6 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
         // Load the settings.
         $this->init_settings();
-        # echo '<pre>'; print_r($this->settings); echo '</pre>'; exit;
 
         // Save our settings
         add_action( 'woocommerce_update_options_integration_endicia_xml', array( &$this, 'process_admin_options' ) );
@@ -68,6 +71,12 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
         // Set up our POST handler that will fire off the Endicia XML download
         add_action( 'woocommerce_process_shop_order_meta', array( $this, 'handle_post' ) );
+
+        # add_action( 'woocommerce_admin_order_item_values', array( $this, 'show_item_weight' ) );
+
+        // Add an input box for this order's combined weight
+        add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'add_weight_info' ) );
+
 
       } // ends __construct()
 
@@ -137,6 +146,44 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
 
       /**
+       * Adds the "Total Order Weight" input to the order display page, critical info for the Endicia postage
+       */
+      function add_weight_info() {
+
+        $totalWeight = 0;
+        $weightUnit  = get_option('woocommerce_weight_unit');
+
+        // Query information about our order, based on the ID in the query string
+        $orderID  = ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) ) ? $_GET['post'] : null;
+        $this->order = ( $orderID != null) ? new WC_Order( $orderID ) : null;
+
+        if ( $this->order != null ) {
+
+          // WC_Order has the list of items for this order...
+          $items = unserialize( $this->order->order_custom_fields['_order_items'][0] );
+
+          if ( is_array( $items ) ) {
+
+            foreach ( $items as $item ) {
+
+              // And then WC_Product_Variation can leak to us the weight of the item!
+              $product = new WC_Product_Variation( $item['id'] );
+              $totalWeight += $product->weight;
+
+            }
+
+          }
+
+        }
+
+        echo '<p class="form-field"><label for="order-weight">Total Order Weight (in '.$weightUnit.'):</label>';
+        echo '<input type="text" name="order-weight" id="order-weight" value="'.$totalWeight.'" /></p>';
+
+      } // ends add_weight_info()
+
+
+
+      /**
        * Handles the $_POST data and fires off the request for postage when the Generate Postage button has been clicked
        */
       function handle_post() {
@@ -199,12 +246,16 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
             $toPhone = str_replace( array( ' ','(',')','-','+','.'), '', $_POST['_billing_phone'] );
           }
 
+          // Translate the weight of the order into ounces. The XML format requires oz,
+          // expressed as float with one decimal place
+          $weight = ( $_POST['order-weight'] != '') ? round( woocommerce_get_weight( $_POST['order-weight'], 'oz'), 1 ) : 0;
+
           $output = <<< END
 <DAZzle OutputFile='{$outputFile}' Start='{$immediatePrint}' Test='YES' Prompt='YES' AutoClose='NO'>
   <Package ID='1'>
     <MailClass>LIBRARYMAIL</MailClass>
     <PackageType>FLATRATEBOX</PackageType>
-    <WeightOz>5</WeightOz>
+    <WeightOz>{$weight}</WeightOz>
     <Value>{$_POST['_order_total']}</Value>
     <Description>Bleep Labs Order #{$_POST['post_ID']}</Description>
     <ReferenceID>{$_POST['post_ID']}</ReferenceID>
