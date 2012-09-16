@@ -66,17 +66,11 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
         // Save our settings
         add_action( 'woocommerce_update_options_integration_endicia_xml', array( &$this, 'process_admin_options' ) );
 
-        // Add the Generate Postage button to the Order dashboard
-        add_action( 'woocommerce_order_actions', array( $this, 'add_button_generate_postage_xml' ) );
+        // Add the Endicia XML section to the Order dashboard
+        add_action( 'woocommerce_admin_order_totals_after_shipping', array( $this, 'add_endicia_xml_panel' ) );
 
         // Set up our POST handler that will fire off the Endicia XML download
         add_action( 'woocommerce_process_shop_order_meta', array( $this, 'handle_post' ) );
-
-        # add_action( 'woocommerce_admin_order_item_values', array( $this, 'show_item_weight' ) );
-
-        // Add an input box for this order's combined weight
-        add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'add_weight_info' ) );
-
 
       } // ends __construct()
 
@@ -136,12 +130,79 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
 
       /**
-       * Adds the "Generate Postage" button to the single Order view in the admin dashboard
+       * Adds the "Download Endicia XML" button and other Endicia content to the single Order view in the admin dashboard
        */
-      function add_button_generate_postage_xml() {
+      function add_endicia_xml_panel() {
 
-        echo '<li><input type="submit" class="button tips" name="endicia_generate_xml" value="Download Endicia XML" data-tip="Click this button to generate XML shipping info file for Endicia / DAZzle" /></li>';
+        echo <<< END
 
+          <div class="clear"></div>
+        </div>
+        <div class="totals_group">
+          <h4>Endicia XML</h4>
+          <ul class="totals">
+            {$this->add_weight_info()}
+            <li class="wide">
+              <label for="endicia-mail-class">Mail class:</label>
+              <select name="endicia_mail_class" id="endicia-mail-class">
+                <option value="FIRST">First-Class Mail</option>
+                <option value="PRIORITY">Priority Mail</option>
+                <option value="PARCELPOST">Parcel Post</option>
+                <option value="MEDIAMAIL">Media Mail</option>
+                <option value="LIBRARYMAIL">Library Mail</option>
+                <option value="BOUNDPRINTEDMATTER">Bound Printed Matter</option>
+                <option value="EXPRESS">Express Mail</option>
+                <option value="PRESORTEDFIRST">Presorted, First Class</option>
+                <option value="PRESORTEDSTANDARD">Presorted, Standard Mail</option>
+                <option value="INTLFIRST">First-Class Mail International</option>
+                <option value="INTLEXPRESS">Express Mail International</option>
+                <option value="INTLPRIORITY">Priority Mail International</option>
+                <option value="INTLGXG">Global Express Guaranteed</option>
+                <option value="INTLGXGNODOC">Global Express Guaranteed Non-Documents</option>
+                <option value="PARCELSELECT">Parcel Select</option>
+                <option value="CRITICALMAIL">Critical Mail</option>
+              </select>
+            </li>
+            <li class="wide">
+              <label for="endicial-package-type">Package type:</label>
+              <select name="endicia_package_type" id="endicia-package-type">
+                <option value="FLATRATEENVELOPE">Flat Rate Envelope</option>
+                <option value="FLATRATEBOX">Flat Rate Box</option>
+                <option value="FLATRATEMEDIUMBOX">Flat Rate Medium Box</option>
+                <option value="FLATRATELARGEBOX">Flat Rate Large Box</option>
+                <option value="FLATRATESMALLBOX">Flat Rate Small Box</option>
+                <option value="FLATRATEPADDEDENVELOPE">Flat Rate Padded Envelope</option>
+                <option value="FLATRATELEGALENVELOPE">Flat Rate Legal Envelope</option>
+                <option value="RECTPARCEL">Rectangular Parcel</option>
+                <option value="NONRECTPARCEL">Non-rectangular Parcel</option>
+                <option value="POSTCARD">Postcard</option>
+                <option value="ENVELOPE">First-Class Mail Letter</option>
+                <option value="FLAT">First-Class Mail Large Envelope</option>
+                <option value="REGIONALRATEBOXA">Regional Rate &#8212; Box A</option>
+                <option value="REGIONALRATEBOXB">Regional Rate &#8212; Box B</option>
+                <option value="REGIONALRATEBOXC">Regional Rate &#8212; Box C</option>
+                <option value="FLATRATEGIFTCARDNVELOPE">Flat Rate Gift Card Envelope</option>
+                <option value="FLATRATEWINDOWENVELOPE">Flat Rate Window Envelope</option>
+                <option value="FLATRATECARDBOARDENVELOPE">Flat Rate Cardboard Envelope</option>
+                <option value="SMALLFLATRATEENVELOPE">Small Flat Rate Envelope</option>
+                <option value="FLATRATEDVDBOX">Flat Rate DVD Box</option>
+                <option value="FLATRATELARGEVIDEOBOX">Flat Rate Large Video Box</option>
+                <option value="FLATRATELARGEBOARDGAMEBOX">Flat Rate Large Board Game Box</option>
+                <option value="HALFTRAYBOX">Half Tray Box (for PMOD)</option>
+                <option value="FULLTRAYBOX">Full Tray Box (for PMOD)</option>
+                <option value="EMMTRAYBOX">EMM Tray Box (for PMOD)</option>
+                <option value="FLATTUBTRAYBOX">Flat Tub Tray Box (for PMOD)</option>
+                <option value="SACK">Sack (for PMOD and EMOD)</option>
+              </select>
+            </li>
+            <li class="left">
+              <input type="submit" class="button tips" name="endicia_generate_xml" value="Download Endicia XML" data-tip="Click this button to generate XML shipping info file for Endicia / DAZzle" />
+            </li>
+          </ul>
+        <div class="clear"></div>
+        </div>
+        <div>
+END;
       } // ends add_button_generate_postage_xml()
 
 
@@ -176,8 +237,14 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
         }
 
-        echo '<p class="form-field"><label for="order-weight">Total Order Weight (in '.$weightUnit.'):</label>';
-        echo '<input type="text" name="order-weight" id="order-weight" value="'.$totalWeight.'" /></p>';
+        $output = <<< END
+          <li class="wide">
+            <label for="order-weight">Total Order Weight (in {$weightUnit}):</label>
+            <input type="text" name="order-weight" id="order-weight" value="{$totalWeight}" />
+          </li>
+END;
+
+        return $output;
 
       } // ends add_weight_info()
 
@@ -250,11 +317,15 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
           // expressed as float with one decimal place
           $weight = ( $_POST['order-weight'] != '') ? round( woocommerce_get_weight( $_POST['order-weight'], 'oz'), 1 ) : 0;
 
+          // Grab the Mail Class and Package Type from the dropdowns
+          $mailClass   = ( $_POST['endicia_mail_class']   != '')  ? $_POST['endicia_mail_class']   : '';
+          $packageType = ( $_POST['endicia_package_type'] != '' ) ? $_POST['endicia_package_type'] : '';
+
           $output = <<< END
 <DAZzle OutputFile='{$outputFile}' Start='{$immediatePrint}' Test='YES' Prompt='YES' AutoClose='NO'>
   <Package ID='1'>
-    <MailClass>LIBRARYMAIL</MailClass>
-    <PackageType>FLATRATEBOX</PackageType>
+    <MailClass>{$mailClass}</MailClass>
+    <PackageType>{$packageType}</PackageType>
     <WeightOz>{$weight}</WeightOz>
     <Value>{$_POST['_order_total']}</Value>
     <Description>Bleep Labs Order #{$_POST['post_ID']}</Description>
