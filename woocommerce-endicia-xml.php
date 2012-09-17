@@ -151,8 +151,8 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
             <li class="wide">
               <label for="endicia-mail-class">Mail Class:</label>
               <select name="endicia_mail_class" id="endicia-mail-class">
-                <option value="FIRST">First-Class Mail</option>
                 <option value="PRIORITY">Priority Mail</option>
+                <option value="FIRST">First-Class Mail</option>
                 <option value="PARCELPOST">Parcel Post</option>
                 <option value="MEDIAMAIL">Media Mail</option>
                 <option value="LIBRARYMAIL">Library Mail</option>
@@ -172,8 +172,8 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
             <li class="wide">
               <label for="endicial-package-type">Package Type:</label>
               <select name="endicia_package_type" id="endicia-package-type">
-                <option value="FLATRATEENVELOPE">Flat Rate Envelope</option>
                 <option value="FLATRATEBOX">Flat Rate Box</option>
+                <option value="FLATRATEENVELOPE">Flat Rate Envelope</option>
                 <option value="FLATRATEMEDIUMBOX">Flat Rate Medium Box</option>
                 <option value="FLATRATELARGEBOX">Flat Rate Large Box</option>
                 <option value="FLATRATESMALLBOX">Flat Rate Small Box</option>
