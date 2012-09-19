@@ -96,6 +96,13 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
             'default'     => get_option('woocommerce_endicia_xml_testing_mode') ? get_option('woocommerce_endicia_xml_testing_mode') : 'no' // backwards
           ),
 
+          'endicia_xml_prompt' => array(
+            'title'       => __('Prompt', 'woocommerce'),
+            'label'       => __('If unchecked, DAZzle will suppress all printing windows and info boxes', 'woocommerce'),
+            'type'        => 'checkbox',
+            'default'     => get_option('woocommerce_endicia_xml_prompt') ? get_option('woocommerce_endicia_xml_prompt') : 'no' // backwards
+          ),
+
           'endicia_xml_start' => array(
             'title'       => __('Immediate Print', 'woocommerce'),
             'label'       => __('If checked, the postage will be sent to the printer immediately after DAZzle imports the XML', 'woocommerce'),
@@ -110,18 +117,96 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
             'default'     => get_option('woocommerce_endicia_xml_stealth') ? get_option('woocommerce_endicia_xml_stealth') : 'no' // backwards
           ),
 
-          'endicia_xml_insured_mail' => array(
-            'title'       => __('Insured Mail', 'woocommerce'),
-            'label'       => __('Choose to insure your shipments', 'woocommerce'),
+          'endicia_xml_auto_print_customs_forms' => array(
+            'title'       => __('Auto-Print Customs Forms?', 'woocommerce'),
+            'label'       => __('If checked, customs forms will automatically print without confirmation', 'woocommerce'),
             'type'        => 'checkbox',
-            'default'     => get_option('woocommerce_endicia_xml_insured_mail') ? get_option('woocommerce_endicia_xml_insured_mail') : 'no' // backwards
+            'default'     => get_option('woocommerce_endicia_xml_auto_print_customs_forms') ? get_option('woocommerce_endicia_xml_auto_print_customs_forms') : '' // backwards
           ),
 
-          'endicia_xml_signature_confirmation' => array(
-            'title'       => __('Signature Confirmation', 'woocommerce'),
-            'label'       => __('Require the customer&#8217;s signature on delivery', 'woocommerce'),
+          'endicia_xml_customs_certify' => array(
+            'title'       => __('Customs Certify', 'woocommerce'),
+            'label'       => __('Enable Customs Certify mode (i.e. use a printed name in place of a signature on the customs form)', 'woocommerce'),
             'type'        => 'checkbox',
-            'default'     => get_option('woocommerce_endicia_xml_signature_confirmation') ? get_option('woocommerce_endicia_xml_signature_confirmation') : 'no' // backwards
+            'default'     => get_option('woocommerce_endicia_xml_customs_certify') ? get_option('woocommerce_endicia_xml_customs_certify') : '' // backwards
+          ),
+
+          'endicia_xml_customs_signer' => array(
+            'title'       => __('Customs Signer', 'woocommerce'),
+            'label'       => __('The name to be printed in place of a signature if Customs Certify is enabled', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_customs_signer') ? get_option('woocommerce_endicia_xml_customs_signer') : '' // backwards
+          ),
+
+          'endicia_xml_customs_hts1' => array(
+            'title'       => __('Customs HTS (default)', 'woocommerce'),
+            'label'       => __('Your desired default Harmonized Tariff Schedule ID for customs declarations', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_hts1') ? get_option('woocommerce_endicia_xml_hts1') : '' // backwards
+          ),
+
+          'endicia_xml_customs_description' => array(
+            'title'       => __('Customs Description (default)', 'woocommerce'),
+            'label'       => __('Your desired default description for customs declarations purposes', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_customs_description') ? get_option('woocommerce_endicia_xml_customs_description') : '' // backwards
+          ),
+
+          'endicia_xml_customs_type' => array(
+            'title'       => __('Customs Type (default)', 'woocommerce'),
+            'label'       => __('Your desired default content type for customs declarations purposes', 'woocommerce'),
+            'type'        => 'select',
+            'options'     => array(
+              'MERCHANDISE'   => 'Merchandise',
+              'DOCUMENTS'     => 'Documents',
+              'SAMPLE'        => 'Sample',
+              'GIFT'          => 'Gift',
+              'RETURNEDGOODS' => 'Returned Goods',
+              'OTHER'         => 'Other'
+            ),
+            'default'     => get_option('woocommerce_endicia_xml_customs_type') ? get_option('woocommerce_endicia_xml_customs_type') : 'MERCHANDISE'
+          ),
+
+          'endicia_xml_return_address_1' => array(
+            'title'       => __('Return Address Line 1', 'woocommerce'),
+            'label'       => __('First return address line', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_return_address_1') ? get_option('woocommerce_endicia_xml_return_address_1') : '' // backwards
+          ),
+
+          'endicia_xml_return_address_2' => array(
+            'title'       => __('Return Address Line 2', 'woocommerce'),
+            'label'       => __('First return address line', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_return_address_2') ? get_option('woocommerce_endicia_xml_return_address_2') : '' // backwards
+          ),
+
+          'endicia_xml_return_address_3' => array(
+            'title'       => __('Return Address Line 3', 'woocommerce'),
+            'label'       => __('First return address line', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_return_address_3') ? get_option('woocommerce_endicia_xml_return_address_3') : '' // backwards
+          ),
+
+          'endicia_xml_return_address_4' => array(
+            'title'       => __('Return Address Line 4', 'woocommerce'),
+            'label'       => __('First return address line', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_return_address_4') ? get_option('woocommerce_endicia_xml_return_address_4') : '' // backwards
+          ),
+
+          'endicia_xml_return_address_5' => array(
+            'title'       => __('Return Address Line 5', 'woocommerce'),
+            'label'       => __('First return address line', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_return_address_5') ? get_option('woocommerce_endicia_xml_return_address_5') : '' // backwards
+          ),
+
+          'endicia_xml_return_address_6' => array(
+            'title'       => __('Return Address Line 6', 'woocommerce'),
+            'label'       => __('First return address line', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_return_address_6') ? get_option('woocommerce_endicia_xml_return_address_6') : '' // backwards
           )
 
         );
@@ -136,6 +221,11 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
         $totalWeight = $this->get_order_weight();
         $weightUnit  = get_option('woocommerce_weight_unit');
+
+        // Simplify our settings variables
+        $settings           = $this->settings;
+        $customsHTS1        = $settings['endicia_xml_customs_hts1'];
+        $customsDescription = $settings['endicia_xml_customs_description'];
 
         echo <<< END
 
@@ -199,6 +289,25 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
                 <option value="EMMTRAYBOX">EMM Tray Box (for PMOD)</option>
                 <option value="FLATTUBTRAYBOX">Flat Tub Tray Box (for PMOD)</option>
                 <option value="SACK">Sack (for PMOD and EMOD)</option>
+              </select>
+            </li>
+            <li class="wide">
+              <label for="customs-hts">Customs HTS:</label>
+              <input type="text" name="customs_hts" id="customs-hts" value="{$customsHTS1}" />
+            </li>
+            <li class="wide">
+              <label for="customs-description">Customs Description:</label>
+              <input type="text" name="customs_description" id="customs-description" value="{$customsDescription}" />
+            </li>
+            <li class="wide">
+              <label for="customs-type">Customs Type:</label>
+              <select name="customs_type" id="customs_type">
+                <option value="MERCHANDISE">Merchandise</option>
+                <option value="DOCUMENTS">Documents</option>
+                <option value="SAMPLE">Sample</option>
+                <option value="GIFT">Gift</option>
+                <option value="RETURNEDGOODS">Returned Goods</option>
+                <option value="OTHER">Other</option>
               </select>
             </li>
             <li class="left">
@@ -268,10 +377,17 @@ END;
           }
 
           // Validate testing mode YES|NO
-          $testing_mode = 'YES';
+          $testingMode = 'YES';
           if (isset($settings['endicia_xml_testing_mode']) || array_key_exists('endicia_xml_testing_mode',$settings)) {
-            $testing_mode = strtoupper($settings['endicia_xml_testing_mode']);
-            $testing_mode = (($testing_mode == 'YES') || ($testing_mode == 'NO')) ? $testing_mode : 'YES';
+            $testingMode = strtoupper($settings['endicia_xml_testing_mode']);
+            $testingMode = (($testingMode == 'YES') || ($testingMode == 'NO')) ? $testingMode : 'YES';
+          }
+
+          // Validate Prompt YES|NO
+          $prompt = 'NO';
+          if (isset($settings['endicia_xml_prompt']) || array_key_exists('endicia_xml_prompt', $settings)) {
+            $prompt = strtoupper($settings['endicia_xml_prompt']);
+            $prompt = ($prompt == 'YES') ? 'YES' : 'NO';
           }
 
           // Validate start="PRINTING" YES|NO
@@ -281,6 +397,13 @@ END;
             $immediatePrint = ($immediatePrint == 'YES') ? 'PRINTING' : 'NO';
           }
 
+          // Validate AutoPrintCustomsForms YES|NO
+          $autoPrintCustomsForms = 'YES';
+          if (isset($settings['endicia_xml_auto_print_customs_forms']) || array_key_exists('endicia_xml_auto_print_customs_forms',$settings)) {
+            $autoPrintCustomsForms = strtoupper($settings['endicia_xml_auto_print_customs_forms']);
+            $autoPrintCustomsForms = (($autoPrintCustomsForms == 'YES') || ($autoPrintCustomsForms == 'NO')) ? $autoPrintCustomsForms : 'YES';
+          }
+
           // Validate stealth mode
           $stealth = 'FALSE';
           if (isset($settings['endicia_xml_stealth']) || array_key_exists('endicia_xml_stealth',$settings)) {
@@ -288,18 +411,35 @@ END;
             $stealth  = ($stealth == 'YES') ? 'TRUE' : 'FALSE';
           }
 
-          // Validate insured mail
-          $insured = 'OFF';
-          if (isset($settings['endicia_xml_insured_mail']) || array_key_exists('endicia_xml_insured_mail',$settings)) {
-            $insured = strtoupper($settings['endicia_xml_insured_mail']);
-            $insured = ($insured == 'YES') ? 'ON' : 'OFF';
+          // Validate Customs Certify mode
+          $customsCertify = 'FALSE';
+          if (isset($settings['endicia_xml_customs_certify']) || array_key_exists('endicia_xml_customs_certify',$settings)) {
+            $customsCertify = strtoupper($settings['endicia_xml_customs_certify']);
+            $customsCertify  = ($customsCertify == 'YES') ? 'TRUE' : 'FALSE';
           }
 
-          // Validate signature confirmation
-          $signatureConfirmation = 'OFF';
-          if (isset($settings['endicia_xml_signature_confirmation']) || array_key_exists('endicia_xml_signature_confirmation',$settings)) {
-            $signatureConfirmation = strtoupper($settings['endicia_xml_signature_confirmation']);
-            $signatureConfirmation = ($signatureConfirmation) ? 'ON' : 'OFF';
+          // Validate the Customs Signer naem
+          $customsSigner = '';
+          if (isset($settings['endicia_xml_customs_signer']) || array_key_exists('endicia_xml_customs_signer', $settings)) {
+            $customsSigner = $settings['endicia_xml_customs_signer'];
+          }
+
+          // Validate the Customs HS Tariff Schedule Number, which might have been overwritten per-order
+          $customsHTS1 = '';
+          if (isset($_POST['customs_hts']) || array_key_exists('customs_hts', $_POST)) {
+            $customsHTS1 = $_POST['customs_hts'];
+          }
+
+          // Validate Customs Description, which might have been overwritten per-order
+          $customsDescription = '';
+          if (isset($_POST['customs_description']) || array_key_exists('customs_description', $_POST)) {
+            $customsDescription = $_POST['customs_description'];
+          }
+
+          // Validate the Customs Type
+          $customsType = '';
+          if (isset($_POST['customs_type']) || array_key_exists('customs_type', $_POST)) {
+            $customsType = $_POST['customs_type'];
           }
 
           // Validate email address
@@ -318,15 +458,48 @@ END;
           // expressed as float with one decimal place
           $weight = ( $_POST['order-weight'] != '') ? round( woocommerce_get_weight( $_POST['order-weight'], 'oz'), 1 ) : 0;
 
+          // Add up and validate the quantity
+          $quantity = array_sum( $_POST['item_quantity'] );
+
           // Grab the Mail Class and Package Type from the dropdowns
           $mailClass   = ( $_POST['endicia_mail_class']   != '')  ? $_POST['endicia_mail_class']   : '';
           $packageType = ( $_POST['endicia_package_type'] != '' ) ? $_POST['endicia_package_type'] : '';
 
+          // Validate the destination country
+          $toCountry  = '';
+          $customsXML = '';
+          if ( isset( $_POST['_shipping_country'] ) || array_key_exists( '_shipping_country' ) ) {
+            $toCountry = $_POST['_shipping_country'];
+          }
+
+          $customsXML = ( $toCountry != 'US' ) ? "
+            <ToCountry>{$toCountry}</ToCountry>
+            <CustomsQuantity1>{$quantity}</CustomsQuantity1>
+            <CustomsDescription1>{$customsDescription}</CustomsDescription1>
+            <CustomsWeight1>{$weight}</CustomsWeight1>
+            <CustomsValue1>{$_POST['_order_total']}</CustomsValue1>
+            <CustomsCountry1>{$toCountry}</CustomsCountry1>
+            <CustomsHTS1>{$customsHTS1}</CustomsHTS1>
+            <ContentsType>{$customsType}</ContentsType>
+            <CustomsSigner>{$customsSigner}</CustomsSigner>
+            <CustomsCertify>{$customsCertify}</CustomsCertify>" : '';
+
+          // Validate the Return Address fields
+          $returnAddress1 = $settings['endicia_xml_return_address_1'];
+          $returnAddress2 = $settings['endicia_xml_return_address_2'];
+          $returnAddress3 = $settings['endicia_xml_return_address_3'];
+          $returnAddress4 = $settings['endicia_xml_return_address_4'];
+          $returnAddress5 = $settings['endicia_xml_return_address_5'];
+          $returnAddress6 = $settings['endicia_xml_return_address_6'];
+
+          echo '<pre>'; print_r($_POST); echo '</pre>';
+
           $output = <<< END
-<DAZzle OutputFile='{$outputFile}' Start='{$immediatePrint}' Test='YES' Prompt='YES' AutoClose='NO'>
+<DAZzle OutputFile='{$outputFile}' Start='{$immediatePrint}' Test='{$testingMode}' Prompt='{$prompt}' AutoClose='NO' AutoPrintCustomsForms='{$autoPrintCustomsForms}'>
   <Package ID='1'>
     <MailClass>{$mailClass}</MailClass>
     <PackageType>{$packageType}</PackageType>
+    <Stealth>{$stealth}</Stealth>
     <WeightOz>{$weight}</WeightOz>
     <Value>{$_POST['_order_total']}</Value>
     <Description>Bleep Labs Order #{$_POST['post_ID']}</Description>
@@ -339,10 +512,18 @@ END;
     <ToPostalCode>{$_POST['_shipping_postcode']}</ToPostalCode>
     <ToEMail>{$toEmail}</ToEMail>
     <ToPhone>{$toPhone}</ToPhone>
+    <ReturnAddress1>{$returnAddress1}</ReturnAddress>
+    <ReturnAddress2>{$returnAddress2}</ReturnAddress>
+    <ReturnAddress3>{$returnAddress3}</ReturnAddress>
+    <ReturnAddress4>{$returnAddress4}</ReturnAddress>
+    <ReturnAddress5>{$returnAddress5}</ReturnAddress>
+    <ReturnAddress6>{$returnAddress6}</ReturnAddress>
+    {$customsXML}
   </Package>
 </DAZzle>
 END;
 
+    echo '<pre>'; print_r($output); echo '</pre>'; exit;
           // Download the file!
           header( 'Content-type: application/xml' );
           header( 'Content-Disposition: attachment; filename=output.xml');
