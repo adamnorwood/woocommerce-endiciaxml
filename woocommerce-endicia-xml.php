@@ -484,8 +484,8 @@ END;
           }
 
           // Build the XML for the customs forms
-          $customsXML = ( $toCountryCode != 'US' ) ? "
-            <ToCountry>{$toCountry}</ToCountry>
+          $customsXML = ( $toCountryCode != 'US' ) ?
+           "<ToCountry>{$toCountry}</ToCountry>
             <CustomsQuantity1>{$quantity}</CustomsQuantity1>
             <CustomsDescription1>{$customsDescription}</CustomsDescription1>
             <CustomsWeight1>{$weight}</CustomsWeight1>
@@ -522,12 +522,12 @@ END;
     <ToPostalCode>{$_POST['_shipping_postcode']}</ToPostalCode>
     <ToEMail>{$toEmail}</ToEMail>
     <ToPhone>{$toPhone}</ToPhone>
-    <ReturnAddress1>{$returnAddress1}</ReturnAddress>
-    <ReturnAddress2>{$returnAddress2}</ReturnAddress>
-    <ReturnAddress3>{$returnAddress3}</ReturnAddress>
-    <ReturnAddress4>{$returnAddress4}</ReturnAddress>
-    <ReturnAddress5>{$returnAddress5}</ReturnAddress>
-    <ReturnAddress6>{$returnAddress6}</ReturnAddress>
+    <ReturnAddress1>{$returnAddress1}</ReturnAddress1>
+    <ReturnAddress2>{$returnAddress2}</ReturnAddress2>
+    <ReturnAddress3>{$returnAddress3}</ReturnAddress3>
+    <ReturnAddress4>{$returnAddress4}</ReturnAddress4>
+    <ReturnAddress5>{$returnAddress5}</ReturnAddress5>
+    <ReturnAddress6>{$returnAddress6}</ReturnAddress6>
     {$customsXML}
   </Package>
 </DAZzle>
