@@ -46,6 +46,10 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
       require( ABSPATH . 'wp-content/plugins/woocommerce/classes/class-wc-product-variation.php' );
     }
 
+    if ( !class_exists('WC_Countries') ) {
+      require( ABSPATH . 'wp-content/plugins/woocommerce/classes/class-wc-countries.php' );
+    }
+
     class WC_Endicia_XML extends WC_Integration {
 
       // Holds order info in single order views
@@ -468,11 +472,19 @@ END;
           // Validate the destination country
           $toCountry  = '';
           $customsXML = '';
-          if ( isset( $_POST['_shipping_country'] ) || array_key_exists( '_shipping_country' ) ) {
-            $toCountry = $_POST['_shipping_country'];
+          if ( isset( $_POST['_shipping_country'] ) || array_key_exists( '_shipping_country', $_POST ) ) {
+
+            $toCountryCode   = $_POST['_shipping_country'];
+            $countryHandler  = new WC_Countries;
+
+            // Verify that the shipping country 2-digit code is recognized, and if so, translate it
+            $toCountry = ( isset( $countryHandler->countries[$toCountryCode] ) ) ?
+              $countryHandler->countries[$toCountryCode] :
+              $toCountryCode;
           }
 
-          $customsXML = ( $toCountry != 'US' ) ? "
+          // Build the XML for the customs forms
+          $customsXML = ( $toCountryCode != 'US' ) ? "
             <ToCountry>{$toCountry}</ToCountry>
             <CustomsQuantity1>{$quantity}</CustomsQuantity1>
             <CustomsDescription1>{$customsDescription}</CustomsDescription1>
@@ -491,8 +503,6 @@ END;
           $returnAddress4 = $settings['endicia_xml_return_address_4'];
           $returnAddress5 = $settings['endicia_xml_return_address_5'];
           $returnAddress6 = $settings['endicia_xml_return_address_6'];
-
-          echo '<pre>'; print_r($_POST); echo '</pre>';
 
           $output = <<< END
 <DAZzle OutputFile='{$outputFile}' Start='{$immediatePrint}' Test='{$testingMode}' Prompt='{$prompt}' AutoClose='NO' AutoPrintCustomsForms='{$autoPrintCustomsForms}'>
@@ -523,7 +533,6 @@ END;
 </DAZzle>
 END;
 
-    echo '<pre>'; print_r($output); echo '</pre>'; exit;
           // Download the file!
           header( 'Content-type: application/xml' );
           header( 'Content-Disposition: attachment; filename=output.xml');
