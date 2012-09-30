@@ -88,9 +88,44 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
         $this->form_fields = array(
           'endicia_xml_output_file' => array(
             'title'       => __('Output File', 'woocommerce'),
-            'label'       => __('Directory path and filename to be used for the output Endicia XML file', 'woocommerce'),
+            'description' => __('Directory path and filename to be used for the output Endicia XML file', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_output_file') ? get_option('woocommerce_endicia_xml_xml_output_file') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\xml\woocommerce-endicia.xml'
+          ),
+
+          'endicia_xml_layout_priority' => array(
+            'title'       => __('Layout File: Domestic Priority', 'woocommerce'),
+            'description' => __('Directory path and filename of the .lyt file to use for Domestic Priority (package or flat rate) label', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_layout_priority') ? get_option('woocommerce_endicia_xml_xml_layout_priority') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\Priority Mail Shipping Label.lyt'
+          ),
+
+          'endicia_xml_layout_express' => array(
+            'title'       => __('Layout File: Domestic Express', 'woocommerce'),
+            'description' => __('Directory path and filename of the .lyt file to use for Domestic Express (package or flat rate) label', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_layout_express') ? get_option('woocommerce_endicia_xml_xml_layout_express') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\Express Mail Shipping Label.lyt'
+          ),
+
+          'endicia_xml_layout_firstclass' => array(
+            'title'       => __('Layout File: First-Class Letter', 'woocommerce'),
+            'description' => __('Directory path and filename of the .lyt file to use for First-Class Letter label', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_layout_firstclass') ? get_option('woocommerce_endicia_xml_xml_layout_firstclass') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\Envelope.lyt'
+          ),
+
+          'endicia_xml_layout_apofpo' => array(
+            'title'       => __('Layout File: APO/FPO or US Territory shipment', 'woocommerce'),
+            'description' => __('Directory path and filename of the .lyt file to use for an APO/FPO label', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_layout_apofpo') ? get_option('woocommerce_endicia_xml_xml_layout_apofpo') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\APO and US Territory Label - Large.lyt'
+          ),
+
+          'endicia_xml_layout_international' => array(
+            'title'       => __('Layout File: International shipment', 'woocommerce'),
+            'description' => __('Directory path and filename of the .lyt file to use for an International label', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_layout_international') ? get_option('woocommerce_endicia_xml_xml_layout_international') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\International Label - Large.lyt'
           ),
 
           'endicia_xml_testing_mode' => array(
