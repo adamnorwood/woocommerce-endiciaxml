@@ -224,13 +224,123 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
        */
       function add_endicia_xml_panel() {
 
+        // Calculate the total weight of this order
         $totalWeight = $this->get_order_weight();
         $weightUnit  = get_option('woocommerce_weight_unit');
 
-        // Simplify our settings variables
-        $settings           = $this->settings;
-        $customsHTS1        = $settings['endicia_xml_customs_hts1'];
-        $customsDescription = $settings['endicia_xml_customs_description'];
+        $isInternational = ( $this->order->shipping_method == 'international_delivery' );
+
+        // Only present customs options if the shipping method is 'international'
+        $customsOptions = '';
+        if ($isInternational) {
+
+          // Simplify our settings variables
+          $settings           = $this->settings;
+
+          $customsHTS1        = $settings['endicia_xml_customs_hts1'];
+          $customsDescription = $settings['endicia_xml_customs_description'];
+
+          $customsOptions = <<< END
+              <li class="wide">
+                <label for="customs-hts">Customs HTS:</label>
+                <input type="text" name="customs_hts" id="customs-hts" value="{$customsHTS1}" />
+              </li>
+              <li class="wide">
+                <label for="customs-description">Customs Description:</label>
+                <input type="text" name="customs_description" id="customs-description" value="{$customsDescription}" />
+              </li>
+              <li class="wide">
+                <label for="customs-type">Customs Type:</label>
+                <select name="customs_type" id="customs_type">
+                  <option value="MERCHANDISE">Merchandise</option>
+                  <option value="DOCUMENTS">Documents</option>
+                  <option value="SAMPLE">Sample</option>
+                  <option value="GIFT">Gift</option>
+                  <option value="RETURNEDGOODS">Returned Goods</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </li>
+END;
+        }
+
+        // Generate the dropdown to select layout file
+        $internationalLayoutSelected = ($isInternational) ? ' selected="selected" ' : '';
+        $layoutFileOptions = <<< END
+
+          <li class="wide">
+            <label for="endicia-layout-file">Label Layout:</label>
+            <select name="endicia_layout_file" id="endicia-layout-file">
+              <optgroup label="Common Domestic Labels">
+                <option value="Priority Mail Shipping Label.lyt">Priority Mail</option>
+                <option value="Express Mail Shipping Label.lyt">Express Mail</option>
+                <option value="Dymo4XL Label.lyt">Dymo4XL</option>
+                <option value="Dymo4XL Express Mail Shipping Label.lyt">Dymo4XL Express Mail</option>
+              </optgroup>
+
+              <optgroup label="Common International Labels">
+                <option value="International Label - Large.lyt" {$internationalLayoutSelected}>International (Large)</option>
+                <option value="International Label - Small 6x4.lyt">International (Small 6x4)</option>
+                <option value="Small First Class Mail International Shipping Label.lyt">Small First Class International Shipping Labe</option>
+                <option value="Small Priority Mail International Shipping Label.lyt">Small Priority Mail International Shipping Label</option>
+                <option value="Large Priority Mail International Shipping Label.lyt">Large Priority Mail International</option>
+                <option value="Large Express Mail International Shipping Label.lyt">Large Express Mail International</option>
+              </optgroup>
+
+              <optgroup label="Other Labels">
+                <option value="Dymo4XL Small First Class Mail International Shipping Label.lyt">Dymo4XL Small First Class Mail International</option>
+                <option value="Dymo4XL Small Priority Mail International Shipping Label.lyt">Dymo4XL Small Priority Mail International</option>
+                <option value="APO and US Territory Label - Large.lyt">APO and US Territory (Large)</option>
+                <option value="APO and US Territory Label - Small 6x4.lyt">APO and US Territory (Small 6x4)</option>
+                <option value="APO FPO Small 6x4.lyt">APO/FPO (Small 6x4)</option>
+                <option value="Avery 5164 label.LYT">Avery 5164</option>
+                <option value="Avery 5168 label.LYT">Avery 5168</option>
+                <option value="Avery Double Label (xx63).LYT">Avery Double (xx63)</option>
+                <option value="Click n Ship Label.lyt">Click n Ship</option>
+                <option value="Click n Ship with Receipt Label.lyt">Click n Ship (with Receipt)</option>
+                <option value="COM10.LYT">COM10</option>
+                <option value="Critical Mail Flat Label.lyt">Critical Mail (Flat)</option>
+                <option value="Critical Mail Letter Label.LYT">Critical Mail (Letter)</option>
+                <option value="DAZZLE.LYT">DAZZLE</option>
+                <option value="DAZZLE2.LYT">DAZZLE2</option>
+                <option value="Dual Priority Mail Label.lyt">Dual Priority Mail</option>
+                <option value="Dymo 30383 Label.lyt">Dymo 30383</option>
+                <option value="Dymo 30384 Label.lyt">Dymo 30384</option>
+                <option value="Dymo 30387 Label with Large DC.lyt">Dymo 30387 (with Large DC)</option>
+                <option value="Dymo 99019 Label.lyt">Dymo 99019</option>
+                <option value="Dymo 99019 with Delivery Confirmation Label.lyt">Dymo 99019 (with Delivery Confirmation)</option>
+                <option value="Dymo4XL plain label.lyt">Dymo4XL Plain</option>
+                <option value="EM Blue Arrow Label.LYT">EM Blue Arrow</option>
+                <option value="EM Red Arrow Label.LYT">EM Red Arrow</option>
+                <option value="Endicia Blue Arrow Label.lyt">Endicia Blue Arrow</option>
+                <option value="Envelope.LYT">Envelope</option>
+                <option value="Express Label Half Page.lyt">Express Label Half Page</option>
+                <option value="First Class Label with Receipt.LYT">First Class (with Receipt)</option>
+                <option value="First Class Label with Receipt Half Page.LYT">First Class (with Receipt Half Page)</option>
+                <option value="Hold For Pickup Express Mail Label.lyt">Hold for Pickup (Express Mail)</option>
+                <option value="Hold For Pickup label.lyt">Hold for Pickup</option>
+                <option value="LBL228.LYT">Label 228</option>
+                <option value="LBL2X10.LYT">Label 2x10</option>
+                <option value="LBL2X5.LYT">Label 2x5</option>
+                <option value="LBLEM.LYT">Label EM</option>
+                <option value="LBLSAMP.LYT">Label Sample</option>
+                <option value="NCR 903165-78.lyt">NCR 903165-78</option>
+                <option value="Open and Distribute Label.lyt">Open and Distribute</option>
+                <option value="Priority Mail Shipping Label, Scan Me.lyt">Priority Mail (Scan Me)</option>
+                <option value="SAMPLE.LYT">Sample</option>
+                <option value="Shipping Label.lyt">Shipping Label</option>
+                <option value="ANNIVER.LYT">Happy Anniversary!</option>
+                <option value="BIRTHDAY.LYT">Happy Birthday!</option>
+                <option value="XMAS.LYT">Don't Open Until Christmas!</option>
+                <option value="Zebra 8 Inch Doctab Label.lyt">Zebra </option>
+                <option value="Zebra Doctab Label.lyt">Zebra Doctab</option>
+                <option value="Zebra Express Mail Shipping Label.lyt">Zebra Express Mail</option>
+                <option value="Zebra Label.lyt">Zebra Label</option>
+                <option value="zebra plain label.lyt">Zebra Plain Label</option>
+                <option value="Zebra Small First Class Mail International Shipping Label.lyt">Zebra Small First Class Mail International</option>
+                <option value="Zebra Small Priority Mail International Shipping Label.lyt">Zebra Priority Mail International</option>
+              </optgroup>
+            </select>
+END;
 
         echo <<< END
 
@@ -296,25 +406,8 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
                 <option value="SACK">Sack (for PMOD and EMOD)</option>
               </select>
             </li>
-            <li class="wide">
-              <label for="customs-hts">Customs HTS:</label>
-              <input type="text" name="customs_hts" id="customs-hts" value="{$customsHTS1}" />
-            </li>
-            <li class="wide">
-              <label for="customs-description">Customs Description:</label>
-              <input type="text" name="customs_description" id="customs-description" value="{$customsDescription}" />
-            </li>
-            <li class="wide">
-              <label for="customs-type">Customs Type:</label>
-              <select name="customs_type" id="customs_type">
-                <option value="MERCHANDISE">Merchandise</option>
-                <option value="DOCUMENTS">Documents</option>
-                <option value="SAMPLE">Sample</option>
-                <option value="GIFT">Gift</option>
-                <option value="RETURNEDGOODS">Returned Goods</option>
-                <option value="OTHER">Other</option>
-              </select>
-            </li>
+            {$layoutFileOptions}
+            {$customsOptions}
             <li class="left">
               <input type="submit" class="button tips" name="endicia_generate_xml" value="Download Endicia XML" data-tip="Click this button to generate XML shipping info file for Endicia / DAZzle" />
             </li>
@@ -385,6 +478,12 @@ END;
           $outputFile = '';
           if (isset($settings['endicia_xml_output_file']) || array_key_exists('endicia_xml_output_file', $settings)) {
             $outputFile = $dazzleDirectory . $settings['endicia_xml_output_file'];
+          }
+
+          // Validate layout file
+          $layoutFile = '';
+          if (isset($_POST['endicia_layout_file']) || array_key_exists('endicia_layout_file', $_POST)) {
+            $layoutFile = $dazzleDirectory . $_POST['endicia_layout_file'];
           }
 
           // Validate testing mode YES|NO
@@ -512,7 +611,7 @@ END;
           $returnAddress6 = $settings['endicia_xml_return_address_6'];
 
           $output = <<< END
-<DAZzle OutputFile='{$outputFile}' Start='{$immediatePrint}' Test='{$testingMode}' Prompt='{$prompt}' AutoClose='NO' AutoPrintCustomsForms='{$autoPrintCustomsForms}'>
+<DAZzle OutputFile='{$outputFile}' Layout='{$layoutFile}' Start='{$immediatePrint}' Test='{$testingMode}' Prompt='{$prompt}' AutoClose='NO' AutoPrintCustomsForms='{$autoPrintCustomsForms}'>
   <Package ID='1'>
     <MailClass>{$mailClass}</MailClass>
     <PackageType>{$packageType}</PackageType>
