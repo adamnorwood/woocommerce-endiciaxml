@@ -59,7 +59,7 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
         $this->id                 = 'endicia_xml';
         $this->method_title       = __( 'Endicia XML', 'woocommerce' );
-        $this->method_description = __( 'Configure these settings to enable exporting orders to Endicia / DAZzle XML for shipping', 'woocommerce' );
+        $this->method_description = __( 'Endicia XML generates XML files per-order for use with Endicia DAZzle shipping label printing', 'woocommerce' );
 
         // Load the settings page form fields
         $this->init_form_fields();
@@ -86,46 +86,18 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
         // Expand our allowed image formats into options for a <select> menu
         $this->form_fields = array(
+          'endicia_xml_directory' => array(
+            'title'       => __('DAZzle document folder path', 'woocommerce'),
+            'description' => __('Full directory path where the DAZzle .lyt layout files etc. are stored', 'woocommerce'),
+            'type'        => 'text',
+            'default'     => get_option('woocommerce_endicia_xml_directory') ? get_option('woocommerce_endicia_xml_xml_directory') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\\'
+          ),
+
           'endicia_xml_output_file' => array(
-            'title'       => __('Output File', 'woocommerce'),
-            'description' => __('Directory path and filename to be used for the output Endicia XML file', 'woocommerce'),
+            'title'       => __('Output XML File', 'woocommerce'),
+            'description' => __('Filename to be used for the output Endicia XML file', 'woocommerce'),
             'type'        => 'text',
-            'default'     => get_option('woocommerce_endicia_xml_output_file') ? get_option('woocommerce_endicia_xml_xml_output_file') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\xml\woocommerce-endicia.xml'
-          ),
-
-          'endicia_xml_layout_priority' => array(
-            'title'       => __('Layout File: Domestic Priority', 'woocommerce'),
-            'description' => __('Directory path and filename of the .lyt file to use for Domestic Priority (package or flat rate) label', 'woocommerce'),
-            'type'        => 'text',
-            'default'     => get_option('woocommerce_endicia_xml_layout_priority') ? get_option('woocommerce_endicia_xml_xml_layout_priority') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\Priority Mail Shipping Label.lyt'
-          ),
-
-          'endicia_xml_layout_express' => array(
-            'title'       => __('Layout File: Domestic Express', 'woocommerce'),
-            'description' => __('Directory path and filename of the .lyt file to use for Domestic Express (package or flat rate) label', 'woocommerce'),
-            'type'        => 'text',
-            'default'     => get_option('woocommerce_endicia_xml_layout_express') ? get_option('woocommerce_endicia_xml_xml_layout_express') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\Express Mail Shipping Label.lyt'
-          ),
-
-          'endicia_xml_layout_firstclass' => array(
-            'title'       => __('Layout File: First-Class Letter', 'woocommerce'),
-            'description' => __('Directory path and filename of the .lyt file to use for First-Class Letter label', 'woocommerce'),
-            'type'        => 'text',
-            'default'     => get_option('woocommerce_endicia_xml_layout_firstclass') ? get_option('woocommerce_endicia_xml_xml_layout_firstclass') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\Envelope.lyt'
-          ),
-
-          'endicia_xml_layout_apofpo' => array(
-            'title'       => __('Layout File: APO/FPO or US Territory shipment', 'woocommerce'),
-            'description' => __('Directory path and filename of the .lyt file to use for an APO/FPO label', 'woocommerce'),
-            'type'        => 'text',
-            'default'     => get_option('woocommerce_endicia_xml_layout_apofpo') ? get_option('woocommerce_endicia_xml_xml_layout_apofpo') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\APO and US Territory Label - Large.lyt'
-          ),
-
-          'endicia_xml_layout_international' => array(
-            'title'       => __('Layout File: International shipment', 'woocommerce'),
-            'description' => __('Directory path and filename of the .lyt file to use for an International label', 'woocommerce'),
-            'type'        => 'text',
-            'default'     => get_option('woocommerce_endicia_xml_layout_international') ? get_option('woocommerce_endicia_xml_xml_layout_international') : 'C:\Documents and Settings\Administrator\My Documents\Endicia\DAZzle\International Label - Large.lyt'
+            'default'     => get_option('woocommerce_endicia_xml_output_file') ? get_option('woocommerce_endicia_xml_xml_output_file') : 'xml\woocommerce-endicia.xml'
           ),
 
           'endicia_xml_testing_mode' => array(
@@ -172,21 +144,21 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
           'endicia_xml_customs_signer' => array(
             'title'       => __('Customs Signer', 'woocommerce'),
-            'label'       => __('The name to be printed in place of a signature if Customs Certify is enabled', 'woocommerce'),
+            'description' => __('The name to be printed in place of a signature if Customs Certify is enabled', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_customs_signer') ? get_option('woocommerce_endicia_xml_customs_signer') : '' // backwards
           ),
 
           'endicia_xml_customs_hts1' => array(
             'title'       => __('Customs HTS (default)', 'woocommerce'),
-            'label'       => __('Your desired default Harmonized Tariff Schedule ID for customs declarations', 'woocommerce'),
+            'description' => __('Your desired default Harmonized Tariff Schedule ID for customs declarations', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_hts1') ? get_option('woocommerce_endicia_xml_hts1') : '' // backwards
           ),
 
           'endicia_xml_customs_description' => array(
             'title'       => __('Customs Description (default)', 'woocommerce'),
-            'label'       => __('Your desired default description for customs declarations purposes', 'woocommerce'),
+            'description' => __('Your desired default description for customs declarations purposes', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_customs_description') ? get_option('woocommerce_endicia_xml_customs_description') : '' // backwards
           ),
@@ -208,42 +180,36 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 
           'endicia_xml_return_address_1' => array(
             'title'       => __('Return Address Line 1', 'woocommerce'),
-            'label'       => __('First return address line', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_return_address_1') ? get_option('woocommerce_endicia_xml_return_address_1') : '' // backwards
           ),
 
           'endicia_xml_return_address_2' => array(
             'title'       => __('Return Address Line 2', 'woocommerce'),
-            'label'       => __('First return address line', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_return_address_2') ? get_option('woocommerce_endicia_xml_return_address_2') : '' // backwards
           ),
 
           'endicia_xml_return_address_3' => array(
             'title'       => __('Return Address Line 3', 'woocommerce'),
-            'label'       => __('First return address line', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_return_address_3') ? get_option('woocommerce_endicia_xml_return_address_3') : '' // backwards
           ),
 
           'endicia_xml_return_address_4' => array(
             'title'       => __('Return Address Line 4', 'woocommerce'),
-            'label'       => __('First return address line', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_return_address_4') ? get_option('woocommerce_endicia_xml_return_address_4') : '' // backwards
           ),
 
           'endicia_xml_return_address_5' => array(
             'title'       => __('Return Address Line 5', 'woocommerce'),
-            'label'       => __('First return address line', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_return_address_5') ? get_option('woocommerce_endicia_xml_return_address_5') : '' // backwards
           ),
 
           'endicia_xml_return_address_6' => array(
             'title'       => __('Return Address Line 6', 'woocommerce'),
-            'label'       => __('First return address line', 'woocommerce'),
             'type'        => 'text',
             'default'     => get_option('woocommerce_endicia_xml_return_address_6') ? get_option('woocommerce_endicia_xml_return_address_6') : '' // backwards
           )
@@ -409,10 +375,16 @@ END;
           // Simplify our settings variables
           $settings = $this->settings;
 
+          // Get the full directory path for DAZzle's document folder
+          $dazzleDirectory = '';
+          if (isset($settings['endicia_xml_directory']) || array_key_exists('endicia_xml_directory', $settings)) {
+            $dazzleDirectory = $settings['endicia_xml_directory'];
+          }
+
           // Validate output file location
           $outputFile = '';
           if (isset($settings['endicia_xml_output_file']) || array_key_exists('endicia_xml_output_file', $settings)) {
-            $outputFile = $settings['endicia_xml_output_file'];
+            $outputFile = $dazzleDirectory . $settings['endicia_xml_output_file'];
           }
 
           // Validate testing mode YES|NO
