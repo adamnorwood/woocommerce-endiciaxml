@@ -377,19 +377,19 @@ END;
             <li class="wide">
               <label for="endicial-package-type">Package Type:</label>
               <select name="endicia_package_type" id="endicia-package-type">
-                <option value="FLATRATEBOX">Flat Rate Box</option>
+                <!-- <option value="FLATRATEBOX">Flat Rate Box</option> -->
                 <option value="FLATRATEENVELOPE">Flat Rate Envelope</option>
-                <option value="FLATRATEMEDIUMBOX">Flat Rate Medium Box</option>
+                <!-- <option value="FLATRATEMEDIUMBOX">Flat Rate Medium Box</option>
                 <option value="FLATRATELARGEBOX">Flat Rate Large Box</option>
                 <option value="FLATRATESMALLBOX">Flat Rate Small Box</option>
                 <option value="FLATRATEPADDEDENVELOPE">Flat Rate Padded Envelope</option>
-                <option value="FLATRATELEGALENVELOPE">Flat Rate Legal Envelope</option>
+                <option value="FLATRATELEGALENVELOPE">Flat Rate Legal Envelope</option> -->
                 <option value="RECTPARCEL">Rectangular Parcel</option>
-                <option value="NONRECTPARCEL">Non-rectangular Parcel</option>
+                <!-- <option value="NONRECTPARCEL">Non-rectangular Parcel</option>
                 <option value="POSTCARD">Postcard</option>
-                <option value="ENVELOPE">First-Class Mail Letter</option>
+                <option value="ENVELOPE">First-Class Mail Letter</option> -->
                 <option value="FLAT">First-Class Mail Large Envelope</option>
-                <option value="REGIONALRATEBOXA">Regional Rate &#8212; Box A</option>
+                <!-- <option value="REGIONALRATEBOXA">Regional Rate &#8212; Box A</option>
                 <option value="REGIONALRATEBOXB">Regional Rate &#8212; Box B</option>
                 <option value="REGIONALRATEBOXC">Regional Rate &#8212; Box C</option>
                 <option value="FLATRATEGIFTCARDNVELOPE">Flat Rate Gift Card Envelope</option>
@@ -403,7 +403,7 @@ END;
                 <option value="FULLTRAYBOX">Full Tray Box (for PMOD)</option>
                 <option value="EMMTRAYBOX">EMM Tray Box (for PMOD)</option>
                 <option value="FLATTUBTRAYBOX">Flat Tub Tray Box (for PMOD)</option>
-                <option value="SACK">Sack (for PMOD and EMOD)</option>
+                <option value="SACK">Sack (for PMOD and EMOD)</option> -->
               </select>
             </li>
             {$layoutFileOptions}
