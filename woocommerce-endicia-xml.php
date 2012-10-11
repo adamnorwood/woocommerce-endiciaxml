@@ -270,75 +270,9 @@ END;
           <li class="wide">
             <label for="endicia-layout-file">Label Layout:</label>
             <select name="endicia_layout_file" id="endicia-layout-file">
-              <optgroup label="Common Domestic Labels">
-                <option value="Priority Mail Shipping Label.lyt">Priority Mail</option>
-                <option value="Express Mail Shipping Label.lyt">Express Mail</option>
-                <option value="Dymo4XL Label.lyt">Dymo4XL</option>
-                <option value="Dymo4XL Express Mail Shipping Label.lyt">Dymo4XL Express Mail</option>
-              </optgroup>
-
-              <optgroup label="Common International Labels">
-                <option value="International Label - Large.lyt" {$internationalLayoutSelected}>International (Large)</option>
-                <option value="International Label - Small 6x4.lyt">International (Small 6x4)</option>
-                <option value="Small First Class Mail International Shipping Label.lyt">Small First Class International Shipping Labe</option>
-                <option value="Small Priority Mail International Shipping Label.lyt">Small Priority Mail International Shipping Label</option>
-                <option value="Large Priority Mail International Shipping Label.lyt">Large Priority Mail International</option>
-                <option value="Large Express Mail International Shipping Label.lyt">Large Express Mail International</option>
-              </optgroup>
-
-              <optgroup label="Other Labels">
-                <option value="Dymo4XL Small First Class Mail International Shipping Label.lyt">Dymo4XL Small First Class Mail International</option>
-                <option value="Dymo4XL Small Priority Mail International Shipping Label.lyt">Dymo4XL Small Priority Mail International</option>
-                <option value="APO and US Territory Label - Large.lyt">APO and US Territory (Large)</option>
-                <option value="APO and US Territory Label - Small 6x4.lyt">APO and US Territory (Small 6x4)</option>
-                <option value="APO FPO Small 6x4.lyt">APO/FPO (Small 6x4)</option>
-                <option value="Avery 5164 label.LYT">Avery 5164</option>
-                <option value="Avery 5168 label.LYT">Avery 5168</option>
-                <option value="Avery Double Label (xx63).LYT">Avery Double (xx63)</option>
-                <option value="Click n Ship Label.lyt">Click n Ship</option>
-                <option value="Click n Ship with Receipt Label.lyt">Click n Ship (with Receipt)</option>
-                <option value="COM10.LYT">COM10</option>
-                <option value="Critical Mail Flat Label.lyt">Critical Mail (Flat)</option>
-                <option value="Critical Mail Letter Label.LYT">Critical Mail (Letter)</option>
-                <option value="DAZZLE.LYT">DAZZLE</option>
-                <option value="DAZZLE2.LYT">DAZZLE2</option>
-                <option value="Dual Priority Mail Label.lyt">Dual Priority Mail</option>
-                <option value="Dymo 30383 Label.lyt">Dymo 30383</option>
-                <option value="Dymo 30384 Label.lyt">Dymo 30384</option>
-                <option value="Dymo 30387 Label with Large DC.lyt">Dymo 30387 (with Large DC)</option>
-                <option value="Dymo 99019 Label.lyt">Dymo 99019</option>
-                <option value="Dymo 99019 with Delivery Confirmation Label.lyt">Dymo 99019 (with Delivery Confirmation)</option>
-                <option value="Dymo4XL plain label.lyt">Dymo4XL Plain</option>
-                <option value="EM Blue Arrow Label.LYT">EM Blue Arrow</option>
-                <option value="EM Red Arrow Label.LYT">EM Red Arrow</option>
-                <option value="Endicia Blue Arrow Label.lyt">Endicia Blue Arrow</option>
-                <option value="Envelope.LYT">Envelope</option>
-                <option value="Express Label Half Page.lyt">Express Label Half Page</option>
-                <option value="First Class Label with Receipt.LYT">First Class (with Receipt)</option>
-                <option value="First Class Label with Receipt Half Page.LYT">First Class (with Receipt Half Page)</option>
-                <option value="Hold For Pickup Express Mail Label.lyt">Hold for Pickup (Express Mail)</option>
-                <option value="Hold For Pickup label.lyt">Hold for Pickup</option>
-                <option value="LBL228.LYT">Label 228</option>
-                <option value="LBL2X10.LYT">Label 2x10</option>
-                <option value="LBL2X5.LYT">Label 2x5</option>
-                <option value="LBLEM.LYT">Label EM</option>
-                <option value="LBLSAMP.LYT">Label Sample</option>
-                <option value="NCR 903165-78.lyt">NCR 903165-78</option>
-                <option value="Open and Distribute Label.lyt">Open and Distribute</option>
-                <option value="Priority Mail Shipping Label, Scan Me.lyt">Priority Mail (Scan Me)</option>
-                <option value="SAMPLE.LYT">Sample</option>
-                <option value="Shipping Label.lyt">Shipping Label</option>
-                <option value="ANNIVER.LYT">Happy Anniversary!</option>
-                <option value="BIRTHDAY.LYT">Happy Birthday!</option>
-                <option value="XMAS.LYT">Don't Open Until Christmas!</option>
-                <option value="Zebra 8 Inch Doctab Label.lyt">Zebra </option>
-                <option value="Zebra Doctab Label.lyt">Zebra Doctab</option>
-                <option value="Zebra Express Mail Shipping Label.lyt">Zebra Express Mail</option>
-                <option value="Zebra Label.lyt">Zebra Label</option>
-                <option value="zebra plain label.lyt">Zebra Plain Label</option>
-                <option value="Zebra Small First Class Mail International Shipping Label.lyt">Zebra Small First Class Mail International</option>
-                <option value="Zebra Small Priority Mail International Shipping Label.lyt">Zebra Priority Mail International</option>
-              </optgroup>
+              <option value="Priority Mail Shipping Label.lyt">Priority Mail</option>
+              <option value="Large Priority Mail International Shipping Label.lyt">Large Priority Mail International</option>
+              <option value="Small Priority Mail International Shipping Label.lyt">Small Priority Mail International Shipping Label</option>
             </select>
 END;
 
