@@ -596,7 +596,7 @@ END;
             <CustomsDescription1>{$customsDescription}</CustomsDescription1>
             <CustomsWeight1>{$weight}</CustomsWeight1>
             <CustomsValue1>{$_POST['_order_total']}</CustomsValue1>
-            <CustomsCountry1>{$toCountry}</CustomsCountry1>
+            <CustomsCountry1>USA</CustomsCountry1>
             <CustomsHTS1>{$customsHTS1}</CustomsHTS1>
             <ContentsType>{$customsType}</ContentsType>
             <CustomsSigner>{$customsSigner}</CustomsSigner>
@@ -638,7 +638,7 @@ END;
   </Package>
 </DAZzle>
 END;
-
+        # echo '<pre>'; print_r($output); echo '</pre>';exit;
           // Download the file!
           header( 'Content-type: application/xml' );
           header( 'Content-Disposition: attachment; filename=output.xml');
