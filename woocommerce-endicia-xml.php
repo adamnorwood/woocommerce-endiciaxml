@@ -263,16 +263,44 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
 END;
         }
 
+        // Let's try to figure out the shipping class (why isn't this available?) ...
+        // I don't like this chunk of code, should really be replaced...
+        global $woocommerce;
+        $shippingClasses = $woocommerce->shipping->shipping_methods[$this->order->shipping_method]->flat_rates;
+
+        foreach( $shippingClasses as $shippingClassName => $shippingClassArray ) {
+          if ($shippingClassArray['cost'] == $this->order->order_shipping) {
+            $shippingClass = $shippingClassName;
+          }
+        }
+
+        // Try to map to mail class
+        $domesticFirstClassSelected      = '';
+        $domesticPrioritySelected        = '';
+        $internationalFirstClassSelected = '';
+        $internationalPrioritySelected   = '';
+
+        if ( !$isInternational ) {
+          $domesticFirstClassSelected        = ( ( $shippingClass == 'first-class' ) || ( $shippingClass == 'flat-rate' ) ) ? ' selected="selected"' : '';
+          $domesticPrioritySelected          = ( $shippingClass == 'priority' ) ? ' selected="selected"' : '';
+        } else {
+          $internationalFirstClassSelected   = ( ( $shippingClass == 'first-class' ) || ( $shippingClass == 'flat-rate' ) ) ? 'selected="selected"' : '';
+          $internationalPrioritySelected     = ( $shippingClass == 'priority' ) ? 'selected="selected"' : '';
+        }
+
         // Generate the dropdown to select layout file
-        $internationalLayoutSelected = ($isInternational) ? ' selected="selected" ' : '';
+        $domesticLayoutSelected              = ( !$isInternational ) ? ' selected="selected" ' : '';
+        $internationalRegularLayoutSelected  = ( $isInternational && ( $shippingClass != 'flat-rate' ) ) ? ' selected="selected" ' : '';
+        $internationalFlatRateLayoutSelected = ( $isInternational && ( $shippingClass == 'flat-rate' ) ) ? ' selected="selected" ' : '';
+
         $layoutFileOptions = <<< END
 
           <li class="wide">
             <label for="endicia-layout-file">Label Layout:</label>
             <select name="endicia_layout_file" id="endicia-layout-file">
-              <option value="Priority Mail Shipping Label.lyt">Priority Mail</option>
-              <option value="Large Priority Mail International Shipping Label.lyt" {$internationalLayoutSelected}>Large Priority Mail International</option>
-              <option value="Small Priority Mail International Shipping Label.lyt">Small Priority Mail International Shipping Label</option>
+              <option value="Shipping Label.lyt" {$domesticLayoutSelected}>Shipping Label</option>
+              <option value="Large Priority Mail International Shipping Label.lyt" {$internationalRegularLayoutSelected}>Large Priority Mail International</option>
+              <option value="Small Priority Mail International Shipping Label.lyt" {$internationalFlatRateLayoutSelected}>Small Priority Mail International Shipping Label</option>
             </select>
 END;
 
@@ -290,8 +318,8 @@ END;
             <li class="wide">
               <label for="endicia-mail-class">Mail Class:</label>
               <select name="endicia_mail_class" id="endicia-mail-class">
-                <option value="PRIORITY">Priority Mail</option>
-                <option value="FIRST">First-Class Mail</option>
+                <option value="PRIORITY" {$domesticPrioritySelected}>Priority Mail</option>
+                <option value="FIRST" {$domesticFirstClassSelected}>First-Class Mail</option>
                 <option value="PARCELPOST">Parcel Post</option>
                 <option value="MEDIAMAIL">Media Mail</option>
                 <option value="LIBRARYMAIL">Library Mail</option>
@@ -299,9 +327,9 @@ END;
                 <option value="EXPRESS">Express Mail</option>
                 <option value="PRESORTEDFIRST">Presorted, First Class</option>
                 <option value="PRESORTEDSTANDARD">Presorted, Standard Mail</option>
-                <option value="INTLFIRST">First-Class Mail International</option>
+                <option value="INTLFIRST" {$internationalFirstClassSelected}>First-Class Mail International</option>
                 <option value="INTLEXPRESS">Express Mail International</option>
-                <option value="INTLPRIORITY">Priority Mail International</option>
+                <option value="INTLPRIORITY" {$internationalPrioritySelected}>Priority Mail International</option>
                 <option value="INTLGXG">Global Express Guaranteed</option>
                 <option value="INTLGXGNODOC">Global Express Guaranteed Non-Documents</option>
                 <option value="PARCELSELECT">Parcel Select</option>
@@ -502,6 +530,9 @@ END;
           // expressed as float with one decimal place
           $weight = ( $_POST['order-weight'] != '') ? round( woocommerce_get_weight( $_POST['order-weight'], 'oz'), 1 ) : 0;
 
+          // Calculate the value (shouldn't include shipping costs)
+          $value = $_POST['_order_total'] - $_POST['_order_shipping'];
+
           // Add up and validate the quantity
           $quantity = array_sum( $_POST['item_quantity'] );
 
@@ -529,7 +560,7 @@ END;
             <CustomsQuantity1>{$quantity}</CustomsQuantity1>
             <CustomsDescription1>{$customsDescription}</CustomsDescription1>
             <CustomsWeight1>{$weight}</CustomsWeight1>
-            <CustomsValue1>{$_POST['_order_total']}</CustomsValue1>
+            <CustomsValue1>{$value}</CustomsValue1>
             <CustomsCountry1>USA</CustomsCountry1>
             <CustomsHTS1>{$customsHTS1}</CustomsHTS1>
             <ContentsType>{$customsType}</ContentsType>
@@ -551,7 +582,7 @@ END;
     <PackageType>{$packageType}</PackageType>
     <Stealth>{$stealth}</Stealth>
     <WeightOz>{$weight}</WeightOz>
-    <Value>{$_POST['_order_total']}</Value>
+    <Value>{$value}</Value>
     <Description>Bleep Labs Order #{$_POST['post_ID']}</Description>
     <ReferenceID>{$_POST['post_ID']}</ReferenceID>
     <ToName>{$_POST['_shipping_first_name']} {$_POST['_shipping_last_name']}</ToName>
@@ -572,7 +603,8 @@ END;
   </Package>
 </DAZzle>
 END;
-        # echo '<pre>'; print_r($output); echo '</pre>';exit;
+
+         #echo '<pre>'; print_r($output); echo '</pre>';exit;
           // Download the file!
           header( 'Content-type: application/xml' );
           header( 'Content-Disposition: attachment; filename=output.xml');
