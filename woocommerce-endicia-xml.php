@@ -228,7 +228,7 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
         $totalWeight = $this->get_order_weight();
         $weightUnit  = get_option('woocommerce_weight_unit');
 
-        $isInternational = ( $this->order->shipping_method == 'international_delivery' );
+        $isInternational = ( $this->order->shipping_country != 'US' );
 
         // Only present customs options if the shipping method is 'international'
         $customsOptions = '';
@@ -271,7 +271,7 @@ END;
             <label for="endicia-layout-file">Label Layout:</label>
             <select name="endicia_layout_file" id="endicia-layout-file">
               <option value="Priority Mail Shipping Label.lyt">Priority Mail</option>
-              <option value="Large Priority Mail International Shipping Label.lyt">Large Priority Mail International</option>
+              <option value="Large Priority Mail International Shipping Label.lyt" {$internationalLayoutSelected}>Large Priority Mail International</option>
               <option value="Small Priority Mail International Shipping Label.lyt">Small Priority Mail International Shipping Label</option>
             </select>
 END;
