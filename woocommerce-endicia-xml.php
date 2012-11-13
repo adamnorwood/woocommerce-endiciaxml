@@ -228,7 +228,7 @@ if ( is_admin() && in_array( 'woocommerce/woocommerce.php', apply_filters( 'acti
         $totalWeight = $this->get_order_weight();
         $weightUnit  = get_option('woocommerce_weight_unit');
 
-        $isInternational = ( $this->order->shipping_country != 'US' );
+        $isInternational = ( isset( $this->order->shipping_country ) && ( $this->order->shipping_country != 'US' ) );
 
         // Only present customs options if the shipping method is 'international'
         $customsOptions = '';
@@ -266,32 +266,40 @@ END;
         // Let's try to figure out the shipping class (why isn't this available?) ...
         // I don't like this chunk of code, should really be replaced...
         global $woocommerce;
-        $shippingClasses = $woocommerce->shipping->shipping_methods[$this->order->shipping_method]->flat_rates;
 
-        foreach( $shippingClasses as $shippingClassName => $shippingClassArray ) {
-          if ($shippingClassArray['cost'] == $this->order->order_shipping) {
-            $shippingClass = $shippingClassName;
+        $shippingClasses = ( isset( $this->order->shipping_method ) && ( $this->order->shipping_method != '' ) ) ? $woocommerce->shipping->shipping_methods[$this->order->shipping_method]->flat_rates : '';
+
+        $domesticFirstClassSelected          = '';
+        $domesticPrioritySelected            = '';
+        $internationalFirstClassSelected     = '';
+        $internationalPrioritySelected       = '';
+        $domesticLayoutSelected              = '';
+        $internationalRegularLayoutSelected  = '';
+        $internationalFlatRateLayoutSelected = '';
+
+        if ( is_array( $shippingClasses ) ) {
+
+          foreach( $shippingClasses as $shippingClassName => $shippingClassArray ) {
+            if ($shippingClassArray['cost'] == $this->order->order_shipping) {
+              $shippingClass = $shippingClassName;
+            }
           }
+
+          // Try to map to mail class
+          if ( !$isInternational ) {
+            $domesticFirstClassSelected        = ( ( $shippingClass == 'first-class' ) || ( $shippingClass == 'flat-rate' ) ) ? ' selected="selected"' : '';
+            $domesticPrioritySelected          = ( $shippingClass == 'priority' ) ? ' selected="selected"' : '';
+          } else {
+            $internationalFirstClassSelected   = ( ( $shippingClass == 'first-class' ) || ( $shippingClass == 'flat-rate' ) ) ? 'selected="selected"' : '';
+            $internationalPrioritySelected     = ( $shippingClass == 'priority' ) ? 'selected="selected"' : '';
+          }
+
+          // Generate the dropdown to select layout file
+          $domesticLayoutSelected              = ( !$isInternational ) ? ' selected="selected" ' : '';
+          $internationalRegularLayoutSelected  = ( $isInternational && ( $shippingClass != 'flat-rate' ) ) ? ' selected="selected" ' : '';
+          $internationalFlatRateLayoutSelected = ( $isInternational && ( $shippingClass == 'flat-rate' ) ) ? ' selected="selected" ' : '';
+
         }
-
-        // Try to map to mail class
-        $domesticFirstClassSelected      = '';
-        $domesticPrioritySelected        = '';
-        $internationalFirstClassSelected = '';
-        $internationalPrioritySelected   = '';
-
-        if ( !$isInternational ) {
-          $domesticFirstClassSelected        = ( ( $shippingClass == 'first-class' ) || ( $shippingClass == 'flat-rate' ) ) ? ' selected="selected"' : '';
-          $domesticPrioritySelected          = ( $shippingClass == 'priority' ) ? ' selected="selected"' : '';
-        } else {
-          $internationalFirstClassSelected   = ( ( $shippingClass == 'first-class' ) || ( $shippingClass == 'flat-rate' ) ) ? 'selected="selected"' : '';
-          $internationalPrioritySelected     = ( $shippingClass == 'priority' ) ? 'selected="selected"' : '';
-        }
-
-        // Generate the dropdown to select layout file
-        $domesticLayoutSelected              = ( !$isInternational ) ? ' selected="selected" ' : '';
-        $internationalRegularLayoutSelected  = ( $isInternational && ( $shippingClass != 'flat-rate' ) ) ? ' selected="selected" ' : '';
-        $internationalFlatRateLayoutSelected = ( $isInternational && ( $shippingClass == 'flat-rate' ) ) ? ' selected="selected" ' : '';
 
         $layoutFileOptions = <<< END
 
