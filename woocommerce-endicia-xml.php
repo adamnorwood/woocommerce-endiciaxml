@@ -290,8 +290,7 @@ END;
             $domesticFirstClassSelected        = ( ( $shippingClass == 'first-class' ) || ( $shippingClass == 'flat-rate' ) ) ? ' selected="selected"' : '';
             $domesticPrioritySelected          = ( $shippingClass == 'priority' ) ? ' selected="selected"' : '';
           } else {
-            $internationalFirstClassSelected   = ( ( $shippingClass == 'first-class' ) || ( $shippingClass == 'flat-rate' ) ) ? 'selected="selected"' : '';
-            $internationalPrioritySelected     = ( $shippingClass == 'priority' ) ? 'selected="selected"' : '';
+            $internationalPrioritySelected     = 'selected="selected"';
           }
 
           // Generate the dropdown to select layout file
