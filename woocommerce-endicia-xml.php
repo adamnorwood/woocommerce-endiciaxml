@@ -410,7 +410,7 @@ END;
           // Validate output file location
           $outputFile = '';
           if (isset($settings['endicia_xml_output_file']) || array_key_exists('endicia_xml_output_file', $settings)) {
-            $outputFile = $dazzleDirectory . $settings['endicia_xml_output_file'];
+            $outputFile = $settings['endicia_xml_output_file'];
           }
 
           // Validate layout file
@@ -545,6 +545,8 @@ END;
           $returnAddress4 = $settings['endicia_xml_return_address_4'];
           $returnAddress5 = $settings['endicia_xml_return_address_5'];
           $returnAddress6 = $settings['endicia_xml_return_address_6'];
+
+          echo '<pre>'; print_r($outputFile); echo '</pre>'; exit;
 
           $output = <<< END
 <DAZzle OutputFile='{$outputFile}' Layout='{$layoutFile}' Start='{$immediatePrint}' Test='{$testingMode}' Prompt='{$prompt}' AutoClose='NO' AutoPrintCustomsForms='{$autoPrintCustomsForms}'>
