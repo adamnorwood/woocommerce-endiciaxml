@@ -546,8 +546,6 @@ END;
           $returnAddress5 = $settings['endicia_xml_return_address_5'];
           $returnAddress6 = $settings['endicia_xml_return_address_6'];
 
-          echo '<pre>'; print_r($outputFile); echo '</pre>'; exit;
-
           $output = <<< END
 <DAZzle OutputFile='{$outputFile}' Layout='{$layoutFile}' Start='{$immediatePrint}' Test='{$testingMode}' Prompt='{$prompt}' AutoClose='NO' AutoPrintCustomsForms='{$autoPrintCustomsForms}'>
   <Package ID='1'>
@@ -559,6 +557,7 @@ END;
     <Description>Bleep Labs Order #{$_POST['post_ID']}</Description>
     <ReferenceID>{$_POST['post_ID']}</ReferenceID>
     <ToName>{$_POST['_shipping_first_name']} {$_POST['_shipping_last_name']}</ToName>
+    <ToCompany>{$_POST['_shipping_company']}</ToCompany>
     <ToAddress1>{$_POST['_shipping_address_1']}</ToAddress1>
     <ToAddress2>{$_POST['_shipping_address_2']}</ToAddress2>
     <ToCity>{$_POST['_shipping_city']}</ToCity>
@@ -577,7 +576,8 @@ END;
 </DAZzle>
 END;
 
-         #echo '<pre>'; print_r($output); echo '</pre>';exit;
+          # echo '<pre>'; print_r($output); echo '</pre>'; exit;
+
           // Download the file!
           header( 'Content-type: application/xml' );
           header( 'Content-Disposition: attachment; filename=output.xml');
