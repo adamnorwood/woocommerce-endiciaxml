@@ -546,7 +546,7 @@ END;
           $returnAddress6 = $settings['endicia_xml_return_address_6'];
 
           $output = <<< END
-<DAZzle OutputFile='{$outputFile}' Layout='{$layoutFile}' Start='{$immediatePrint}' Test='{$testingMode}' Prompt='{$prompt}' AutoClose='NO' AutoPrintCustomsForms='{$autoPrintCustomsForms}'>
+<DAZzle OutputFile='{$outputFile}' Layout='{$layoutFile}' Start='{$immediatePrint}' Test="{$testingMode}" Prompt="{$prompt}" AutoClose='NO' AutoPrintCustomsForms='{$autoPrintCustomsForms}'>
   <Package ID='1'>
     <MailClass>{$mailClass}</MailClass>
     <PackageType>{$packageType}</PackageType>
