@@ -10,7 +10,6 @@
   * @class WC_Endicia
   * @package WooCommerce
   * @category Integrations
-  * @author Adam Norwood
   *
   * Copyright Adam Norwood (@anorwood / adam@adamnorwood.com)
   *
@@ -395,7 +394,7 @@ END;
         $totalWeight = 0;
 
         // Query information about our order, based on the ID in the query string
-        $orderID  = ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) ) ? $_GET['post'] : null;
+        $orderID     = ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) ) ? $_GET['post'] : null;
         $this->order = ( $orderID != null) ? new WC_Order( $orderID ) : null;
 
         if ( $this->order != null ) {
@@ -407,10 +406,9 @@ END;
 
             foreach ( $items as $item ) {
 
-              // And then WC_Product or WC_Product_Variation can leak to us the weight of the item!
-              $product = ( $item['variation_id'] != '') ?
+              $product = ( $item['variation_id'] !== "0" ) ?
                 new WC_Product_Variation( $item['variation_id'] ) :
-                new WC_Product( $item['id'] );
+                new WC_Product_Simple( $item['product_id'] );
 
               $totalWeight += ( $product->weight * $item['qty'] );
 
@@ -610,8 +608,6 @@ END;
   </Package>
 </DAZzle>
 END;
-
-          # echo '<pre>'; print_r($output); echo '</pre>'; exit;
 
           // Download the file!
           header( 'Content-type: application/xml' );
