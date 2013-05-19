@@ -377,7 +377,7 @@ END;
             {$layoutFileOptions}
             {$customsOptions}
             <li class="left">
-              <input type="submit" class="button tips" name="endicia_generate_xml" value="Download Endicia XML" data-tip="Click this button to generate XML shipping info file for Endicia / DAZzle" />
+              <button type="submit" class="button button-primary tips" name="endicia_generate_xml" value="Download Endicia XML" data-tip="Click this button to generate XML shipping info file for Endicia / DAZzle">Download Endicia XML</button>
             </li>
           </ul>
         <div class="clear"></div>
