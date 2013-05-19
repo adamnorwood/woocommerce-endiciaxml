@@ -401,7 +401,7 @@ END;
         if ( $this->order != null ) {
 
           // WC_Order has the list of items for this order...
-          $items = unserialize( $this->order->order_custom_fields['_order_items'][0] );
+          $items = $this->order->get_items();
 
           if ( is_array( $items ) ) {
 
@@ -540,7 +540,7 @@ END;
           $value = $_POST['_order_total'] - $_POST['_order_shipping'];
 
           // Add up and validate the quantity
-          $quantity = array_sum( $_POST['item_quantity'] );
+          $quantity = array_sum( $_POST['order_item_qty'] );
 
           // Grab the Mail Class and Package Type from the dropdowns
           $mailClass   = ( $_POST['endicia_mail_class']   != '')  ? $_POST['endicia_mail_class']   : '';
