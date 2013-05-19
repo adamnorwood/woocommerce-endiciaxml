@@ -2,7 +2,7 @@
 /**
   * Plugin Name: WooCommerce Endicia XML
   * Plugin URI: https://github.com/adamnorwood/woocommerce-endicia-xml
-  * Description: An attempt to integrate WooCommerce with the Endicia DAZzle XML functionality
+  * Description: An integration of WooCommerce with Endicia DAZzle XML for printing USPS shipping labels.
   * Version: 0.9b
   * Author: Adam Norwood
   * Author URI: http://adamnorwood.com/
@@ -12,7 +12,7 @@
   * @category Integrations
   * @author Adam Norwood
   *
-  * Copyright 2012 Adam Norwood (email : adam@adamnorwood.com)
+  * Copyright Adam Norwood (@anorwood / adam@adamnorwood.com)
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License, version 2, as
